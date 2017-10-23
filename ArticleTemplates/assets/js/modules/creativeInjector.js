@@ -1,13 +1,14 @@
 define([
-    'modules/util'
+    'modules/util',
+    'modules/services/viewport'
 ],
 function (
-    util
+    util,
+    viewport
 ) {
     'use strict';
 
     var initialised;
-    var trackedImpressions = [];
 
     function init() {
         if (!initialised) {
@@ -28,10 +29,8 @@ function (
         for (i = 0; i < liveBlogEpicContainers.length; i++) {
             liveBlogEpicContainer = liveBlogEpicContainers[i];
             liveBlogEpicContainerId = liveBlogEpicContainer.getAttribute('id');
-
             liveBlogEpicContainer.setAttribute('data-tracked', 'true');
-
-            addEventListenerScroll(liveBlogEpicContainer, liveBlogEpicContainerId);
+            observeCreative(liveBlogEpicContainer, liveBlogEpicContainerId);
         }
     }
 
@@ -56,8 +55,14 @@ function (
         document.head.appendChild(style);
     }
 
-    function addEventListenerScroll(creativeContainer, id) {
-        window.addEventListener('scroll', util.debounce(isCreativeInView.bind(null, creativeContainer, id), 100));
+    function observeCreative(creativeContainer, id) {
+        var callback = function () {
+            var messageName = 'creative_impression/' + id;
+            util.signalDevice(messageName);
+            viewport.unobserve(creativeContainer, 0.5, callback);
+        };
+
+        viewport.observe(creativeContainer, 0.5, callback);
     }
 
     function injectHTML(html, id, type) {
@@ -74,7 +79,7 @@ function (
             injectEpicCreative(creativeContainer);
         }
 
-        addEventListenerScroll(creativeContainer, id);
+        observeCreative(creativeContainer, id);
     }
 
     function injectInlineCreative(creativeContainer) {
@@ -98,16 +103,6 @@ function (
 
         if (prose) {
             prose.appendChild(creativeContainer);
-        }
-    }
-
-    function isCreativeInView(creativeContainer, id) {
-        var messageName = 'creative_impression/' + id;
-
-        if (trackedImpressions.indexOf(id) === -1 && util.isElementPartiallyInViewport(creativeContainer)) {
-            util.signalDevice(messageName);
-
-            trackedImpressions.push(id);
         }
     }
 

@@ -179,6 +179,11 @@
 
 
         <script type="text/javascript">
+            var atoms = {};
+            
+            function readAtoms() {
+            }
+            
             GU.bootstrap.init({
                 sectionTone: "news",
                 isAdvertising: "" ? true : false,
@@ -197,7 +202,8 @@
                 useAdsReady: "true" === "true" ? true : false,
                 section: "UK",
                 tests: '{}',
-                nativeYoutubeEnabled: "" === "true" ? true : false
+                nativeYoutubeEnabled: "" === "true" ? true : false,
+                atoms: atoms
             });
         </script>
 

@@ -21,34 +21,47 @@ module.exports = (env, argv) => {
         },
         module: {
             rules: [{
-                    test: /\.js$/,
-                    exclude: /node_modules/,
-                    use: [
-                        "babel-loader"
-                    ],
-                },
-                {
-                    test: /\.scss$/,
-                    use: [{
-                            loader: MiniCssExtractPlugin.loader,
-                        },
-                        {
-                            loader: "css-loader",
-                            options: {
-                                url: false,
-                                minimize: true,
-                                sourceMap: argv.mode !== 'production',
-                            }
-                        },
-                        {
-                            loader: 'sass-loader',
-                            options: {
-                                sourceMap: argv.mode !== 'production'
-                            }
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: [
+                    "babel-loader",
+                ],
+            }, {
+                test: /\.js$/,
+                include: [
+                    path.resolve(__dirname, 'ArticleTemplates/assets/js/article.js'),
+                    path.resolve(__dirname, 'ArticleTemplates/assets/js/audio.js'),
+                    path.resolve(__dirname, 'ArticleTemplates/assets/js/cricket.js'),
+                    path.resolve(__dirname, 'ArticleTemplates/assets/js/football.js'),
+                    path.resolve(__dirname, 'ArticleTemplates/assets/js/gallery.js'),
+                    path.resolve(__dirname, 'ArticleTemplates/assets/js/liveblog.js'),
+                    path.resolve(__dirname, 'ArticleTemplates/assets/js/video.js'),
+                ],
+                exclude: /node_modules/,
+                use: [
+                    "eslint-loader",
+                ],
+            }, {
+                test: /\.scss$/,
+                use: [{
+                        loader: MiniCssExtractPlugin.loader,
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            url: false,
+                            minimize: true,
+                            sourceMap: argv.mode !== 'production',
                         }
-                    ]
-                },
-            ]
+                    },
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: argv.mode !== 'production'
+                        }
+                    }
+                ]
+            }]
         },
         resolve: {
             modules: [

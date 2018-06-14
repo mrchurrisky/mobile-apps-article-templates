@@ -4,7 +4,7 @@ import domready from 'domready';
 
 import ads from './modules/ads';
 
-const init = opts => {
+const init = (opts) => {
     window.GU.opts = opts;
 
     __webpack_public_path__ = `${opts.templatesDirectory}/assets/build/`;
@@ -37,24 +37,24 @@ const init = opts => {
         'initMpuPoller',
         'videoPositioning',
         'getArticleHeight',
-        'injectInlineArticleMembershipCreative'
+        'injectInlineArticleMembershipCreative',
     ];
 
-    const applyNativeFunctionCall = name => {
-        const queue = window[name + 'Queue'];
+    const applyNativeFunctionCall = (name) => {
+        const queue = window[`${name}Queue`];
 
         if (queue) {
-            Array.prototype.forEach.call(queue, function(item) {
+            Array.prototype.forEach.call(queue, function (item) {
                 window[name].apply(this, item);
             });
         }
     };
 
-    const setNativeFunctionCall = name => {
-        const queue = name + 'Queue';
+    const setNativeFunctionCall = (name) => {
+        const queue = `${name}Queue`;
 
         // Create a function to catch early calls
-        window[name] = function() {
+        window[name] = function () {
             window[queue] = window[queue] || [];
             // Store arguments for each call so
             // true function can apply these when ready
@@ -86,11 +86,11 @@ const init = opts => {
         const getAdType = () => {
             const contentType = opts.contentType;
 
-            if ((contentType === 'liveblog' && !GU.opts.isMinute) || 
+            if ((contentType === 'liveblog' && !GU.opts.isMinute) ||
                 (contentType !== 'liveblog' && document.querySelector('.article__body--liveblog'))) {
                 return 'liveblog';
             }
-    
+
             return 'default';
         };
         const contentType = opts.contentType;
@@ -101,52 +101,52 @@ const init = opts => {
             ads.init({
                 adsConfig: opts.adsConfig,
                 adsType: getAdType(),
-                mpuAfterParagraphs: opts.mpuAfterParagraphs
+                mpuAfterParagraphs: opts.mpuAfterParagraphs,
             });
         }
 
         // other article-specific functions
         if (contentType === 'article') {
-            import(/* webpackChunkName: "article" */ './article').then(article => {
+            import(/* webpackChunkName: "article" */ './article').then((article) => {
                 article.init();
             });
         } else if (contentType === 'liveblog') {
-            import(/* webpackChunkName: "liveblog" */ './liveblog').then(liveblog => {
+            import(/* webpackChunkName: "liveblog" */ './liveblog').then((liveblog) => {
                 liveblog.init();
             });
         } else if (contentType === 'audio') {
-            import(/* webpackChunkName: "audio" */ './audio').then(audio => {
+            import(/* webpackChunkName: "audio" */ './audio').then((audio) => {
                 audio.init();
             });
         } else if (contentType === 'gallery') {
-            import(/* webpackChunkName: "gallery" */ './gallery').then(gallery => {
+            import(/* webpackChunkName: "gallery" */ './gallery').then((gallery) => {
                 gallery.init();
             });
         } else if (contentType === 'football') {
-            import(/* webpackChunkName: "football" */ './football').then(football => {
+            import(/* webpackChunkName: "football" */ './football').then((football) => {
                 football.init();
             });
         } else if (contentType === 'cricket') {
-            import(/* webpackChunkName: "cricket" */ './cricket').then(cricket => {
+            import(/* webpackChunkName: "cricket" */ './cricket').then((cricket) => {
                 cricket.init();
             });
         } else if (contentType === 'video') {
-            import(/* webpackChunkName: "video" */ './video').then(video => {
+            import(/* webpackChunkName: "video" */ './video').then((video) => {
                 video.init();
             });
         } else {
-            import(/* webpackChunkName: "common" */ './bootstraps/common').then(common => {
+            import(/* webpackChunkName: "common" */ './bootstraps/common').then((common) => {
                 common.init();
             });
         }
     };
 
     domready(kickOff);
-}
+};
 
 const go = () => {
     window.GU.bootstrap = {
-        init
+        init,
     };
 };
 
